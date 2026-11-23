@@ -1,0 +1,19 @@
+{
+  "name": "monster-arena",
+  "version": "1.0.0",
+  "description": "Is a Monster Crowler game, for a UNI assignment.",
+  "homepage": "https://github.com/ManuMk7/Monster-Arena-#readme",
+  "bugs": {
+    "url": "https://github.com/ManuMk7/Monster-Arena-/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ManuMk7/Monster-Arena-.git"
+  },
+  "author": "Emanuele Pera, Nicolò Volpi, Alessio Nizzi, Giacomo Muzi, Filippo Barbanera",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
