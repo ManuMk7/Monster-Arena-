@@ -17,6 +17,7 @@ Quando il giocatore muore, mostra il punteggio finale e permette di iniziare una
     <link href="css/style.css" type="text/css" rel="stylesheet">
 </head>
 <body>
+    <script src="js/game.js"></script>
 <div id="info-partita">
 
     <span id="NomeGiocatore"></span>
@@ -27,14 +28,14 @@ Quando il giocatore muore, mostra il punteggio finale e permette di iniziare una
 <div id="giocatore">
 
     <label for="hp-giocatore"></label>
-    <progress id="hp-giocatore" max="100" value="100" style="accent-color: #e74c3c;"></progress><span>100/100</span>
+    <progress id="hp-giocatore" max="100" value="100" style="accent-color: #e74c3c;"></progress><span id="testoHp">100/100</span>
     <label for="mp-giocatore"></label>
-    <progress id="mp-giocatore" max="100" value="100"></progress><span>100/100</span>
+    <progress id="mp-giocatore" max="100" value="100"></progress><span id="testoMp">100/100</span>
 </div>
 <div id="mostro">
-
+    <span id="NomeMostro"></span>
     <label for="hp-mostro"></label>
-    <progress id="hp-mostro" max="100" value="100" style="accent-color: #e74c3c;"></progress><span>100/100</span>
+    <progress id="hp-mostro" max="100" value="100" style="accent-color: #e74c3c;"></progress><span id="testoHp">100/100</span>
 </div>
 
 <div id="azioni">
