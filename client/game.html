@@ -20,26 +20,33 @@ Quando il giocatore muore, mostra il punteggio finale e permette di iniziare una
 <div id="info-partita">
 
     <span id="NomeGiocatore"></span>
-    <span id="num-mostri"></span>
+    <span id="num-mostri">0</span>
     <span id="record-globale"></span>
 </div>
 
 <div id="giocatore">
 
     <label for="hp-giocatore"></label>
-    <progress id="hp-giocatore" max="100%" value="100%" style="accent-color: #e74c3c;"></progress>
+    <progress id="hp-giocatore" max="100%" value="100%" style="accent-color: #e74c3c;"></progress><span>100/100</span>
     <label for="mp-giocatore"></label>
-    <progress id="mp-giocatore" max="100%" value="100%"></progress>
+    <progress id="mp-giocatore" max="100%" value="100%"></progress><span>100/100</span>
 </div>
 <div id="mostro">
 
     <label for="hp-mostro"></label>
-    <progress id="hp-mostro" max="100%" value="100%" style="accent-color: #e74c3c;"></progress>
-    <label for="mp-mostro"></label>
-    <progress id="mp-mostro" max="100%" value="100%"></progress>
+    <progress id="hp-mostro" max="100%" value="100%" style="accent-color: #e74c3c;"></progress><span>100/100</span>
 </div>
 
+<div id="azioni">
+    <button id="attacco">Attacco</button>
+    <button id="magia">Magia</button>
+    <button id="cura">Cura</button>
+</div>
 
+<div id="game-over" hidden>
+    <span id="punteggio-finale"></span>
+    <button id="restart"></button>
+</div>
 
 </body>
 </html>
