@@ -77,3 +77,40 @@ app.post("/start", (req, res) => {
     res.cookie('gameId', gameId, { httpOnly: true });
     res.status(201).json(getGameState(newGame));
 })
+
+app.get("/state", (req, res) => {
+    const gameId = req.cookies.gameId;
+
+    /*
+        if (!gameId || !games.has(gameId)) {
+            return res.status(404).json({ error: "Nessuna partita trovata" });
+        }
+    */
+
+    //muzismo dimmi te come è meglio il controllo sempre se serve farlo, perché non so quando /state lo vogliono chiamare
+    //perché se lo chiamano solo quando sono dentro /game già c'è il controllo lì
+
+    const game = games.get(gameId);
+
+    /*
+        if (!game) {
+            return res.status(404).json({ error: "Nessuna partita trovata" });
+        }
+    */
+
+    res.json({
+        name: game.name,
+        hp: game.hp,
+        maxHp: game.maxHp,
+        mana: game.mana,
+        maxMana: game.maxMana,
+        kills: game.kills,
+        status: game.status,
+        monster: {
+            name: game.monster.name,
+            hp: game.monster.hp,
+            maxHp: game.monster.maxHp
+        },
+        message: game.message
+    });
+});
