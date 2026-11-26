@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<!--game.html
+Mostra il nome del giocatore e il numero di mostri sconfitti.
+Mostra HP e MP del giocatore con barre <progress>.
+Mostra il nome e gli HP del mostro corrente.
+Contiene tre pulsanti: Attacco, Magia e Cura.
+Mostra il risultato dell'ultima azione.
+Mostra il record globale.
+Quando il giocatore muore, mostra il punteggio finale e permette di iniziare una nuova partita.
+-->
+ 
+<html lang="it">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div id="info-partita">
+
+    <span id="NomeGiocatore"></span>
+    <span id="num-mostri"></span>
+    <span id="record-globale"></span>
+</div>
+
+<div id="giocatore">
+
+    <label for="hp-giocatore"></label>
+    <progress id="hp-giocatore" max="100%" value="100%" style="accent-color: #e74c3c;"></progress>
+    <label for="mp-giocatore"></label>
+    <progress id="mp-giocatore" max="100%" value="100%"></progress>
+</div>
+<div id="mostro">
+
+    <label for="hp-mostro"></label>
+    <progress id="hp-mostro" max="100%" value="100%" style="accent-color: #e74c3c;"></progress>
+    <label for="mp-mostro"></label>
+    <progress id="mp-mostro" max="100%" value="100%"></progress>
+</div>
+
+
+
+</body>
+</html>
