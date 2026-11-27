@@ -62,34 +62,6 @@ function getGameState(game){
     };
 }
 
-//funzione che controlla post azione del giocatore lo stato del mostro e in caso contrattacca
-function turn(game, action){
-    let log = action;
-    if(game.monster.hp <= 0){
-        game.kills++;
-        game.mana = Math.min(game.maxMana, game.mana + 10);
-
-        const newMonster = createMonster();
-        game.monster = newMonster;
-        log += ` You defeated the monster! A new ${newMonster.name} has appeared.`;
-    }
-    else {
-        const monsterDamage = randomNumber(game.monster.minDamage, game.monster.maxDamage);
-        game.hp = Math.max(0, game.hp - monsterDamage);
-        log += ` The ${game.monster.name} attacks you for ${monsterDamage} damage.`;
-
-        if(game.hp <= 0){
-            game.status = "lost";
-            if(game.kills > bestRecord.kills){
-                bestRecord.name = game.name;
-                bestRecord.kills = game.kills;
-            }
-        }
-    }
-
-    game.message = log;
-}
-
 app.post("/start", (req, res) => {
     const playerName = req.body.name.trim();
     if(playerName == "")
@@ -122,9 +94,8 @@ app.get("/state", (req, res) => {
     const gameId = req.cookies.gameId;
     const game = games.get(gameId);
 
-    if (!game){
+    if(!game)
         return res.status(404).json({ error: "No Game found" });
-    }
 
     res.json(getGameState(game));
 });
@@ -133,17 +104,61 @@ app.get("/record", (req, res) => {
     res.json(bestRecord);
 })
 
+//funzione che controlla post azione del giocatore lo stato del mostro e in caso gestisce il contrattacco
+function turn(game, action){
+    if(game.monster.hp <= 0){
+        //il giocatore ha sconfitto il mostro
+        game.kills++;
+        
+        game.mana += 10;
+        if(game.mana > game.maxMana)
+            game.mana = game.maxMana;
+
+        const newMonster = createMonster();
+        game.monster = newMonster;
+        action += ` You defeated the monster! A new ${newMonster.name} has appeared.`;
+    }
+    else{
+        //contrattacco
+        const monsterDamage = randomNumber(game.monster.minDamage, game.monster.maxDamage);
+
+        game.hp -= monsterDamage;
+        if(game.hp < 0)
+            game.hp = 0;
+
+        action += ` The ${game.monster.name} attacks you for ${monsterDamage} damage.`;
+
+        if(game.hp == 0){
+            //il giocatore è stato sconfitto
+            game.status = "lost";
+            action += " You are dead!";
+
+            if(game.kills > bestRecord.kills){
+                bestRecord.name = game.name;
+                bestRecord.kills = game.kills;
+            }
+        }
+    }
+
+    game.message = action;
+}
+
 app.post("/attack", (req, res) => {
     const gameId = req.cookies.gameId;
     const game = games.get(gameId);
 
-    if (!game){
+    if(!game)
         return res.status(404).json({ error: "No Game found" });
-    }
 
     const damage = randomNumber(10, 18);
-    game.monster.hp = Math.max(0, game.monster.hp - damage);
-    game.mana = Math.min(game.maxMana, game.mana + 5);
+    
+    game.monster.hp -= damage;
+    if(game.monster.hp < 0)
+        game.monster.hp = 0; //se l'hp del mostro diventa negativo quando viene sconfitto, si imposta a 0 per preferenza grafica in HTML
+
+    game.mana += 5;
+    if(game.mana > game.maxMana)
+        game.mana = game.maxMana; //se la mana sfora maxMana, viene impostata al valore massimo di mana possibile 
 
     const action = `Attack the ${game.monster.name} for ${damage} damage.`;
     turn(game, action);
@@ -155,19 +170,21 @@ app.post("/magic", (req, res) => {
     const gameId = req.cookies.gameId;
     const game = games.get(gameId);
 
-    if (!game){
+    if(!game)
         return res.status(404).json({ error: "No Game found" });
-    }
 
-    if(game.mana < 15){
-        return res.status(400).json({ error: "You don't have enough mana to use this spell" });//error 400 consigliato da code se hai idee migliori cambialo
-    }
+    if(game.mana < 15)
+        return res.status(400).json({ error: "You don't have enough mana to use this spell" });
 
-    const damage = randomNUmber(25, 35);
-    game.monster.hp = Math.max(0, game.monster.hp - damage);
+    const damage = randomNumber(25, 35);
+    
+    game.monster.hp -= damage;
+    if(game.monster.hp < 0)
+        game.monster.hp = 0;
+
     game.mana -= 15;
 
-    const action = `Cast a spell on the ${game.monster.name} for ${damage} damage.`;//code mi ha fatto cambiare quasi obbligatoriamente le liniette per le string...
+    const action = `Cast a spell on the ${game.monster.name} for ${damage} damage.`;
     turn(game, action);
 
     res.json(getGameState(game));
@@ -177,16 +194,18 @@ app.post("/heal", (req, res) => {
     const gameId = req.cookies.gameId;
     const game = games.get(gameId);
 
-    if (!game){
+    if(!game)
         return res.status(404).json({ error: "No Game found" });
-    }
 
-    if(game.mana < 20){
+    if(game.mana < 20)
         return res.status(400).json({ error: "You don't have enough mana to use this spell" });
-    }
 
     const healAmount = randomNumber(15, 25);
-    game.hp = Math.min(game.maxHp, game.hp + healAmount);
+
+    game.hp += healAmount;
+    if(game.hp > game.maxHp)
+        game.hp = game.maxHp;
+
     game.mana -= 20;
 
     const action = `Heal yourself for ${healAmount} HP.`;
@@ -198,7 +217,3 @@ app.post("/heal", (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-//le chiamate le ho implementate tutte, cambia quello che credi giusto
-//il record l'ho solo gestito su turn cambiando quello vecchio con quello nuovo,
-//ma se vogliamo far vedere anche il record della partita in gioco va implementato
