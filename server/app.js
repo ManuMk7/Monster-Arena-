@@ -62,10 +62,38 @@ function getGameState(game){
     };
 }
 
+//funzione che controlla post azione del giocatore lo stato del mostro e in caso contrattacca
+function turn(game, action){
+    let log = action;
+    if(game.monster.hp <= 0){
+        game.kills++;
+        game.mana = Math.min(game.maxMana, game.mana + 10);
+
+        const newMonster = createMonster();
+        game.monster = newMonster;
+        log += ` You defeated the monster! A new ${newMonster.name} has appeared.`;
+    }
+    else {
+        const monsterDamage = randomNumber(game.monster.minDamage, game.monster.maxDamage);
+        game.hp = Math.max(0, game.hp - monsterDamage);
+        log += ` The ${game.monster.name} attacks you for ${monsterDamage} damage.`;
+
+        if(game.hp <= 0){
+            game.status = "lost";
+            if(game.kills > bestRecord.kills){
+                bestRecord.name = game.name;
+                bestRecord.kills = game.kills;
+            }
+        }
+    }
+
+    game.message = log;
+}
+
 app.post("/start", (req, res) => {
     const playerName = req.body.name.trim();
     if(playerName == "")
-        return res.status(400).json({ error: "Il nome del giocatore non è valido" });
+        return res.status(400).json({ error: "Name of the player is not valid" });
 
     const monster = createMonster();
 
@@ -78,7 +106,7 @@ app.post("/start", (req, res) => {
             kills: 0,
             status: "playing",
             monster: monster,
-            message: 'È apparso un ${firstMonster.name}!.'
+            message: `A ${firstMonster.name} has appeared!.`
     }
 
     const gameId = crypto.randomUUID();
@@ -95,7 +123,7 @@ app.get("/state", (req, res) => {
     const game = games.get(gameId);
 
     if (!game){
-        return res.status(404).json({ error: "Nessuna partita trovata" });
+        return res.status(404).json({ error: "No Game found" });
     }
 
     res.json(getGameState(game));
@@ -105,4 +133,72 @@ app.get("/record", (req, res) => {
     res.json(bestRecord);
 })
 
-//Rimangono /attack, /magic e /heal
+app.post("/attack", (req, res) => {
+    const gameId = req.cookies.gameId;
+    const game = games.get(gameId);
+
+    if (!game){
+        return res.status(404).json({ error: "No Game found" });
+    }
+
+    const damage = randomNumber(10, 18);
+    game.monster.hp = Math.max(0, game.monster.hp - damage);
+    game.mana = Math.min(game.maxMana, game.mana + 5);
+
+    const action = `Attack the ${game.monster.name} for ${damage} damage.`;
+    turn(game, action);
+
+    res.json(getGameState(game));
+});
+
+app.post("/magic", (req, res) => {
+    const gameId = req.cookies.gameId;
+    const game = games.get(gameId);
+
+    if (!game){
+        return res.status(404).json({ error: "No Game found" });
+    }
+
+    if(game.mana < 15){
+        return res.status(400).json({ error: "You don't have enough mana to use this spell" });//error 400 consigliato da code se hai idee migliori cambialo
+    }
+
+    const damage = randomNUmber(25, 35);
+    game.monster.hp = Math.max(0, game.monster.hp - damage);
+    game.mana -= 15;
+
+    const action = `Cast a spell on the ${game.monster.name} for ${damage} damage.`;//code mi ha fatto cambiare quasi obbligatoriamente le liniette per le string...
+    turn(game, action);
+
+    res.json(getGameState(game));
+})
+
+app.post("/heal", (req, res) => {
+    const gameId = req.cookies.gameId;
+    const game = games.get(gameId);
+
+    if (!game){
+        return res.status(404).json({ error: "No Game found" });
+    }
+
+    if(game.mana < 20){
+        return res.status(400).json({ error: "You don't have enough mana to use this spell" });
+    }
+
+    const healAmount = randomNumber(15, 25);
+    game.hp = Math.min(game.maxHp, game.hp + healAmount);
+    game.mana -= 20;
+
+    const action = `Heal yourself for ${healAmount} HP.`;
+    turn(game, action);
+
+    res.json(getGameState(game));
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+//le chiamate le ho implementate tutte, cambia quello che credi giusto
+//il record l'ho solo gestito su turn cambiando quello vecchio con quello nuovo,
+//ma se vogliamo far vedere anche il record della partita in gioco va implementato
