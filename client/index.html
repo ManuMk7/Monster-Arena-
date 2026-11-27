@@ -1,5 +1,7 @@
+
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,21 +10,51 @@
 </head>
 <body>
 
-    <div>
+    <div id="header">
         <h1>Monster Arena</h1>
     </div>
 
-    <div>
-        <h3>Record:<div>Nessun Record</div></h3>
+    <div id="setup">
+        <div class="record-box">
+            <h3>Record: <span id="record-attuale">Nessun Record</span></h3>
+        </div>
+
+        <form id="setup-form">
+            <div class="input-group">
+                <label for="NomeGiocatore">Nome Giocatore:</label>
+                <input type="text" id="NomeGiocatore" name="NomeGiocatore" placeholder="XxD4rkVolp0xX" required>
+            </div>
+
+            <div class="avatar-selection">
+                <legend>Scegli il tuo Mostro:</legend>
+                
+                <div class="avatar-grid">
+                    <label class="avatar-option">
+                        <input type="radio" name="avatar" value="drago" checked>
+                        <span class="avatar-card">🐉Drago</span>
+                    </label>
+
+                    <label class="avatar-option">
+                        <input type="radio" name="avatar" value="golem">
+                        <span class="avatar-card">🗿Golem</span>
+                    </label>
+
+                    <label class="avatar-option">
+                        <input type="radio" name="avatar" value="spettro">
+                        <span class="avatar-card">👻Spettro</span>
+                    </label>
+
+                    <label class="avatar-option">
+                        <input type="radio" name="avatar" value="demone">
+                        <span class="avatar-card">👹Demone</span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit">Inizia Partita</button>
+        </form>
     </div>
 
-    <form>
-        <label for="NomeGiocatore">Nome Giocatore:</label>
-        <input type="text" id="NomeGiocatore" name="NomeGiocatore" placeholder="XxD4rkVolp0xX">
-        <button type="submit">Inizia Partita</button>
-    </form>
-
-    
-    
 </body>
 </html>
+
