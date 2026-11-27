@@ -11,6 +11,14 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, '../client')));
 
+const games = new Map(); //associa ogni gameId (stringa) allo stato della partita
+
+//oggetto record utilizzato per memorizzare il miglior record stabilito nel gioco
+const bestRecord = {
+    name: "",
+    kills: 0
+}
+
 const MONSTERS = [
     { name: "Slime", maxHp: 30, minDamage: 5, maxDamage: 9 },
     { name: "Goblin", maxHp: 50, minDamage: 8, maxDamage: 13 },
@@ -21,6 +29,8 @@ function randomNumber(min, max){
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/*funzione che crea una copia di un oggetto monster, dato che non sarebbe buona pratica agire
+direttamente sugli oggetti modello*/
 function createMonster(){
     const monster = MONSTERS[randomNumber(0, 2)];
     
@@ -33,6 +43,7 @@ function createMonster(){
     }
 }
 
+//funzione che formatta la risposta json con la struttura richiesta, in base al parametro game specificato
 function getGameState(game){
     return {
         name: game.name,
@@ -67,50 +78,31 @@ app.post("/start", (req, res) => {
             kills: 0,
             status: "playing",
             monster: monster,
-            message: `È apparso un ${firstMonster.name}!.`
+            message: 'È apparso un ${firstMonster.name}!.'
     }
 
     const gameId = crypto.randomUUID();
 
     games.set(gameId, newGame);
 
+    //imposta il cookie per il gameId
     res.cookie('gameId', gameId, { httpOnly: true });
     res.status(201).json(getGameState(newGame));
 })
 
 app.get("/state", (req, res) => {
     const gameId = req.cookies.gameId;
-
-    /*
-        if (!gameId || !games.has(gameId)) {
-            return res.status(404).json({ error: "Nessuna partita trovata" });
-        }
-    */
-
-    //muzismo dimmi te come è meglio il controllo sempre se serve farlo, perché non so quando /state lo vogliono chiamare
-    //perché se lo chiamano solo quando sono dentro /game già c'è il controllo lì
-
     const game = games.get(gameId);
 
-    /*
-        if (!game) {
-            return res.status(404).json({ error: "Nessuna partita trovata" });
-        }
-    */
+    if (!game){
+        return res.status(404).json({ error: "Nessuna partita trovata" });
+    }
 
-    res.json({
-        name: game.name,
-        hp: game.hp,
-        maxHp: game.maxHp,
-        mana: game.mana,
-        maxMana: game.maxMana,
-        kills: game.kills,
-        status: game.status,
-        monster: {
-            name: game.monster.name,
-            hp: game.monster.hp,
-            maxHp: game.monster.maxHp
-        },
-        message: game.message
-    });
+    res.json(getGameState(game));
 });
+
+app.get("/record", (req, res) => {
+    res.json(bestRecord);
+})
+
+//Rimangono /attack, /magic e /heal
