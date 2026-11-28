@@ -20,22 +20,27 @@ Quando il giocatore muore, mostra il punteggio finale e permette di iniziare una
     <script src="js/game.js"></script>
 <div id="info-partita">
 
-    <span id="NomeGiocatore"></span>
-    <span id="num-mostri">0</span>
-    <span id="record-globale"></span>
+    <span>Giocatore: <strong id="NomeGiocatore"></strong></span>
+    <span>Mostri sconfitti: <strong id="mostri-sconfitti">0</strong></span>
+    <span>Record: <strong id="record">Nessun Record</strong></span>
 </div>
 
 <div id="giocatore">
+    <h3>Il tuo Eroe</h3>
+    <label for="hp-giocatore">HP</label>
+    <progress id="hp-giocatore" max="100" value="100"></progress>
+    <span id="testoHp">100/100</span>
 
-    <label for="hp-giocatore"></label>
-    <progress id="hp-giocatore" max="100" value="100"></progress><span id="testoHp">100/100</span>
-    <label for="mp-giocatore"></label>
-    <progress id="mp-giocatore" max="100" value="100"></progress><span id="testoMp">100/100</span>
+    <label for="mp-giocatore">MP</label>
+    <progress id="mp-giocatore" max="100" value="100"></progress>
+    <span id="testoMp">100/100</span>
 </div>
+
 <div id="mostro">
-    <span id="NomeMostro"></span>
-    <label for="hp-mostro"></label>
-    <progress id="hp-mostro" max="100" value="100"></progress><span id="testoHp">100/100</span>
+    <h3 id="NomeMostro">Mostro Selvatico</h3>
+    <label for="hp-mostro">HP</label>
+    <progress id="hp-mostro" max="100" value="100"></progress>
+    <span id="testoHpMostro">100/100</span>
 </div>
 
 <div id="azioni">

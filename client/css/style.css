@@ -57,7 +57,7 @@ body {
 }
 
 .avatar-selection {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .avatar-option input[type="radio"] {
@@ -81,7 +81,7 @@ body {
     border-radius: 10px;
     background-color: #262626;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1em;
     transition: 0.2s;
 }
 
@@ -92,7 +92,7 @@ body {
 .avatar-option input[type="radio"]:checked + .avatar-card {
     border-color: #ff4500;
     background-color: #3a1c1c;
-    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+    box-shadow: 0 0 10px rgba(255, 68, 0, 0.726);
 }
 
 button[type="submit"] {
@@ -102,14 +102,224 @@ button[type="submit"] {
     border-radius: 8px;
     background-color: #ff4500;
     color: white;
-    font-size: 1.1rem;
+    font-size: 1.1em;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 button[type="submit"]:hover {
+    background-color: #8f340f;
+}
+
+#info-partita,
+#giocatore,
+#mostro,
+#azioni,
+#game-over {
+    width: 100%;
+    max-width: 550px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+#info-partita {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #1e1e1e;
+    border: 2px solid #555;
+    border-radius: 12px;
+    font-size: 1em;
+    color: #ccc;
+}
+
+#info-partita > span {
+    color: #888;
+}
+
+#info-partita strong {
+    color: white;
+}
+
+#NomeGiocatore,
+#mostri-sconfitti,
+#record {
+    font-weight: bold;
+    color: white;
+}
+
+#giocatore,
+#mostro {
+    padding: 20px;
+    background-color: #1e1e1e;
+    border: 2px solid #555;
+    border-radius: 15px;
+    display: grid;
+    grid-template-columns: 45px 1fr 65px;
+    align-items: center;
+    gap: 12px 10px;
+}
+
+#giocatore h3,
+#mostro h3 {
+    grid-column: 1 / -1;
+    margin: 0 0 5px 0;
+    font-size: 1.2em;
+    border-bottom: 2px solid #333;
+    padding-bottom: 8px;
+}
+
+#giocatore h3 {
+    color: #ffffff;
+}
+
+#mostro h3 {
+    color: #ff6b4a;
+}
+
+label[for="hp-giocatore"],
+label[for="hp-mostro"] {
+    font-weight:bold;
+    color: #2ecc71;
+    font-size: 0.9em;
+}
+
+label[for="mp-giocatore"] {
+    font-weight: bold;
+    color: #3498db;
+    font-size: 0.9em;
+}
+
+#testoHp,
+#testoMp,
+#testoHpMostro {
+    text-align: right;
+    font-size: 0.85em;
+    color: #bbb;
+    font-family: monospace;
+}
+
+progress {
+    width: 100%;
+    height: 14px;
+    border: none;
+    border-radius: 7px;
+    background-color: #121212;
+    overflow: hidden;
+}
+
+#hp-giocatore::-webkit-progress-bar,        /*progress-bar indica sfondo vuoto quindi quando si esaurisce la vita*/
+#mp-giocatore::-webkit-progress-bar,
+#hp-mostro::-webkit-progress-bar {
+    background-color: #121212;
+}
+
+#hp-giocatore::-webkit-progress-value,      /*progress-value indica la parte piena della barra*/
+#hp-mostro::-webkit-progress-value {
+    background-color: #2ecc71;
+    transition: width 0.3s ease;
+}
+
+#hp-giocatore::-moz-progress-bar,
+#hp-mostro::-moz-progress-bar {
+    background-color: #2ecc71;
+}
+
+#mp-giocatore::-webkit-progress-value {
+    background-color: #3498db;
+    transition: width 0.3s ease;
+}
+
+#mp-giocatore::-moz-progress-bar {
+    background-color: #3498db;
+}
+
+#azioni {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+#azioni button {
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+#azioni button:hover {
+    transform: translateY(-2px);
+}
+
+#azioni button:active {
+    transform: translateY(0);
+}
+
+#attacco {
+    background-color: #ff4500;
+}
+
+#magia {
+    background-color: #8e44ad;
+}
+
+#cura {
+    background-color: #27ae60;
+}
+
+/* 4. Pannello Game Over */
+#game-over[hidden] {
+    display: none;
+}
+
+#game-over {
+    padding: 25px;
+    background-color: #2c1515;
+    border: 2px solid #ff4500;
+    border-radius: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+#game-over::before {
+    content: "GAME OVER";
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #ff4500;
+}
+
+#punteggio-finale {
+    font-size: 1.1em;
+    color: white;
+}
+
+#restart {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    background-color: #ff4500;
+    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#restart:empty::before {
+    content: "Nuova Partita";
+}
+
+#restart:hover {
     background-color: #e03e00;
 }
+
 
 
