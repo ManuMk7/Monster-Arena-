@@ -71,9 +71,22 @@ window.onload = function() {
 
         event.preventDefault();
 
-        const nome = nomeGiocatore.value;
+        const nome = nomeGiocatore.value.trim();    // trim() elimina gli spazzi iniziali e finali restituendo una nuova stringa
 
-        console.log(nome);
+        
+        if (nome === "") {
+            
+            // Nome vuoto non valido
+            alert("Inserisci un nome valido!");
+            return;
+            
+        }
+        else {
+            
+            // Nome valido
+            console.log(nome);
+
+        }
 
     });
 
