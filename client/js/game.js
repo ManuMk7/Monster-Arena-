@@ -29,4 +29,17 @@ window.onload = function() {
     // Messaggio ultima azione
     const messaggioAzione = document.getElementById("messaggio-azione");
 
+
+    // Recupero delle informazioni
+    fetch("/state")
+    .then(response => {
+
+        // Controllo della risposta HTTP
+        if (!response.ok) {
+            throw new Error("Errore HTTP: " + response.status);
+        }
+
+        // Conversione della risposta in JSON
+        return response.json();
+    })
 };
