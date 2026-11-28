@@ -1,5 +1,11 @@
 window.onload = function() {
 
+
+
+    // ==========================================
+    // RECUPERO DEGLI ELEMENTI HTML
+    // ==========================================
+
     // Informazioni partita
     const nomeGiocatore = document.getElementById("NomeGiocatore");
     const numMostri = document.getElementById("num-mostri");
@@ -30,25 +36,96 @@ window.onload = function() {
     const messaggioAzione = document.getElementById("messaggio-azione");
 
 
-    // Recupero delle informazioni
-    fetch("/state")
-    .then(response => {
+    // ==========================================
+    // RECUPERO DEL RECORD GLOBALE
+    // ==========================================
+    function aggiornaRecord() {
 
-        // Controllo della risposta HTTP
-        if (!response.ok) {
-            throw new Error("Errore HTTP: " + response.status);
+        fetch("/record")
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error("Errore HTTP: " + response.status);
+            }
+
+            return response.json();
+        })
+        .then(data => {
+
+            if (data.name === "" && data.kills === 0) {
+                recordGlobale.textContent = "Nessun record disponibile";
+            } else {
+                recordGlobale.textContent =
+                    "Record: " + data.name + " - " +
+                    data.kills + " mostri sconfitti";
+            }
+
+        })
+        .catch(error => {
+            console.error("Errore nel recupero del record:", error);
+            recordGlobale.textContent = "Record non disponibile";
+        });
+    }
+
+
+    // ==========================================
+    // AGGIORNAMENTO DELL'INTERFACCIA
+    // ==========================================
+    function aggiornaInterfaccia(data) {
+
+        // Informazioni giocatore
+        nomeGiocatore.textContent = data.name;
+        numMostri.textContent = data.kills;
+
+        // HP e MP giocatore
+        hpGiocatore.max = data.maxHp;
+        hpGiocatore.value = data.hp;
+
+        mpGiocatore.max = data.maxMana;
+        mpGiocatore.value = data.mana;
+
+        testoHpGiocatore.textContent =
+            data.hp + "/" + data.maxHp;
+
+        testoMp.textContent =
+            data.mana + "/" + data.maxMana;
+
+        // Informazioni mostro
+        nomeMostro.textContent = data.monster.name;
+
+        hpMostro.max = data.monster.maxHp;
+        hpMostro.value = data.monster.hp;
+
+        testoHpMostro.textContent =
+            data.monster.hp + "/" + data.monster.maxHp;
+
+        // Messaggio ultima azione
+        messaggioAzione.textContent = data.message;
+
+        // Controllo Game Over
+        if (data.status === "lost") {
+
+            gameOver.hidden = false;
+
+            punteggioFinale.textContent =
+                "Partita terminata! Mostri sconfitti: " + data.kills;
+
+            // Disabilito i pulsanti delle azioni
+            btnAttacco.disabled = true;
+            btnMagia.disabled = true;
+            btnCura.disabled = true;
+
+            // Aggiorno il record dopo la fine della partita
+            aggiornaRecord();
+
+        } else {
+
+            gameOver.hidden = true;
+
+            // Gestione disponibilità delle azioni
+            btnAttacco.disabled = false;
+            btnMagia.disabled = data.mana < 15;
+            btnCura.disabled = data.mana < 20;
         }
-
-        // Conversione della risposta in JSON
-        return response.json();
-    })
-    .then(data => {
-
-        // Qui abbiamo ricevuto i dati della partita
-        console.log(data);
-
-    })
-    .catch(error => {
-        console.error("Errore nel recupero della partita:", error);
-    });
+    }
 };
