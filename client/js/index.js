@@ -9,7 +9,8 @@ window.onload = function() {
     // Recupero del record globale
     fetch("/record")
         .then(response => {
-
+            
+            // Controllo la sisposta
             if (!response.ok) {
                 throw new Error("Errore HTTP: " + response.status);
             }
@@ -35,6 +36,34 @@ window.onload = function() {
             recordAttuale.textContent = "Impossibile recuperare il record";
 
         });
+
+    
+    // Controllo se esiste una partita in corso lasciata in sospeso
+    fetch("/state")
+        .then(response => {
+            
+            // Controllo la risposta
+            if (response.status === 200) {
+                // Riposta ok: esiste una partita avviata quindi reindirizzo su game.html
+                window.location.href = "game.html";
+
+            }
+            else if (response.status === 404) {
+
+                // Nessuna partita attiva: rimango in index.html
+
+            }
+            else {
+
+                throw new Error("Errore HTTP: " + response.status);
+
+            }
+        })
+        .catch(error => {
+
+            console.error(error);
+
+        })
 
 
     // Recupero i valori inseriti dall'utente
