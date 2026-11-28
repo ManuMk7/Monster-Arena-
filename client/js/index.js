@@ -59,11 +59,18 @@ window.onload = function() {
 
             }
         })
+        .then(data => {
+
+            if (data.status === "playing") {
+                window.location.href = "game.html";
+            }
+
+        })
         .catch(error => {
 
             console.error(error);
 
-        })
+        });
 
 
     // Recupero i valori inseriti dall'utente
@@ -85,6 +92,34 @@ window.onload = function() {
             
             // Nome valido
             console.log(nome);
+
+            fetch("/start", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({name: nome})
+            })
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error("Errore HTTP: " + response.status);
+                }
+
+                return response.json();
+            })
+            .then(data => {
+
+                // Partita creata correttamente
+                window.location.href = "game.html";
+
+            })
+            .catch(error => {
+
+                console.error(error);
+                alert("Impossibile avviare la partita!");
+
+            });
 
         }
 
