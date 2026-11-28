@@ -78,7 +78,7 @@ app.post("/start", (req, res) => {
             kills: 0,
             status: "playing",
             monster: monster,
-            message: `A ${firstMonster.name} has appeared!.`
+            message: `A ${monster.name} has appeared!.`
     }
 
     const gameId = crypto.randomUUID();
