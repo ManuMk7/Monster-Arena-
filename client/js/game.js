@@ -42,4 +42,13 @@ window.onload = function() {
         // Conversione della risposta in JSON
         return response.json();
     })
+    .then(data => {
+
+        // Qui abbiamo ricevuto i dati della partita
+        console.log(data);
+
+    })
+    .catch(error => {
+        console.error("Errore nel recupero della partita:", error);
+    });
 };
